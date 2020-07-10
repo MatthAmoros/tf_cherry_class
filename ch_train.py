@@ -19,10 +19,10 @@ def main():
 	x = dataset
 
 	model = keras.Sequential([
-		keras.layers.Dense(3, input_dim=3, activation=tf.nn.relu), #4 dimensions in v2
-		keras.layers.Dense(9, activation=tf.nn.relu),
-		keras.layers.Dense(18, activation=tf.nn.relu),
-		keras.layers.Dense(18, activation=tf.nn.relu),
+		keras.layers.Dense(3, input_dim=3, activation=tf.nn.relu), #3 dimensions in v2
+		keras.layers.Dense(6, activation=tf.nn.relu),
+		keras.layers.Dense(12, activation=tf.nn.relu),
+		keras.layers.Dense(12, activation=tf.nn.relu),
 		keras.layers.Dense(20, activation=tf.nn.softmax) #Probabilities out of 20 labels
 	])
 

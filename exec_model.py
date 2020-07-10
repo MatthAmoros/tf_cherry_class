@@ -16,12 +16,6 @@ def main():
 		labels = dataset["Variety"].copy()
 		dataset.drop(labels=["Variety"], axis=1, inplace=True)
 		""" Normalize """
-		""" durofel_inf_65	durofel_65_70	durofel_sup_75	durofel_70_75
-		color_red	color_red_brown	color_brown	color_black	color_dark_brown
-		brix_red	brix_dark_brown	brix_brown	brix_black
-		Temperature_Outside	Temperature_Frut
-		Variety """
-
 		dataset['durofel'] = normalize(dataset['durofel'])
 		dataset['color'] = normalize(dataset['color'])
 		dataset['max_brix'] = normalize(dataset['max_brix'])
