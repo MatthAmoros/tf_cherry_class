@@ -10,7 +10,8 @@ import tensorflow as tf #Tensor Flow
 from tensorflow import keras
 
 # Data sets
-CHERRY_QC_TRAINING = "./data/CH_EXPORT_QC_2018-2019_CSV_FORMATED.csv"
+""" v2: We just take color and durofel as a trend and max(brix), frut temperature has been deleted due to some errors in reporting """
+CHERRY_QC_TRAINING = "./data/CH_EXPORT_QC_2018-2019_CSV_FORMATED_v2.csv"
 CHERRY_TEST = "./data/CH_TEST.csv"
 
 def main():
@@ -18,11 +19,10 @@ def main():
 	x = dataset
 
 	model = keras.Sequential([
-		keras.layers.Dense(15, input_dim=15, activation=tf.nn.relu), #15 dimensions
-		keras.layers.Dense(30, activation=tf.nn.relu),
-		keras.layers.Dense(60, activation=tf.nn.relu),
-		keras.layers.Dense(120, activation=tf.nn.relu),
-		keras.layers.Dense(240, activation=tf.nn.relu),
+		keras.layers.Dense(3, input_dim=3, activation=tf.nn.relu), #4 dimensions in v2
+		keras.layers.Dense(9, activation=tf.nn.relu),
+		keras.layers.Dense(18, activation=tf.nn.relu),
+		keras.layers.Dense(18, activation=tf.nn.relu),
 		keras.layers.Dense(20, activation=tf.nn.softmax) #Probabilities out of 20 labels
 	])
 
@@ -48,26 +48,9 @@ def main():
 		Temperature_Outside	Temperature_Frut
 		Variety """
 
-		dataset['durofel_inf_65'] = normalize(dataset['durofel_inf_65'])
-		dataset['durofel_65_70'] = normalize(dataset['durofel_65_70'])
-		dataset['durofel_sup_75'] = normalize(dataset['durofel_sup_75'])
-		dataset['durofel_70_75'] = normalize(dataset['durofel_70_75'])
-
-		dataset['color_red'] = normalize(dataset['color_red'])
-		dataset['color_red_brown'] = normalize(dataset['color_red_brown'])
-		dataset['color_brown'] = normalize(dataset['color_brown'])
-		dataset['color_black'] = normalize(dataset['color_black'])
-		dataset['color_dark_brown'] = normalize(dataset['color_dark_brown'])
-
-
-		dataset['brix_red'] = normalize(dataset['brix_red'])
-		dataset['brix_dark_brown'] = normalize(dataset['brix_dark_brown'])
-		dataset['brix_brown'] = normalize(dataset['brix_brown'])
-		dataset['brix_black'] = normalize(dataset['brix_black'])
-
-		dataset['Temperature_Outside'] = normalize(dataset['Temperature_Outside'])
-		dataset['Temperature_Frut'] = normalize(dataset['Temperature_Frut'])
-
+		dataset['durofel'] = normalize(dataset['durofel'])
+		dataset['color'] = normalize(dataset['color'])
+		dataset['max_brix'] = normalize(dataset['max_brix'])
 		return labels
 
 	labels = prepare_dataset()
@@ -76,7 +59,7 @@ def main():
 	log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 	tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1, write_graph=True)
 
-	model.fit(x=dataset.values, y=labels.values, epochs=200, callbacks=[tensorboard_callback])
+	model.fit(x=dataset.values, y=labels.values, epochs=5, callbacks=[tensorboard_callback])
 	scores = model.evaluate(x=dataset.values, y=labels.values, verbose=0)
 
 	print('Model scores : ' + str(scores))
